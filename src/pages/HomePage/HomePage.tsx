@@ -1,4 +1,4 @@
-import { NavLink, Outlet, Route, Routes } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const HomePage = () => {
   return (
@@ -10,7 +10,7 @@ export const HomePage = () => {
           <NavLink to="/three-days">3 Days</NavLink>
           <NavLink to="/week">Week</NavLink>
         </nav>
-        <Outlet />
+        {/* <Outlet /> */}
       </section>
     </>
   );

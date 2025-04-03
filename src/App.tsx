@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./pages/HomePage/HomePage";
+import { Layout } from "./components/Layout/Layout";
+import { NotFound } from "./pages/NotFoundPage/NotFoundPage";
 
-function App() {
-  const [count, setCount] = useState(0)
+// const Layout = () => {
+//   const [isOpen, setIsOpen] = useState(false);
 
+//   return (
+//     <>
+//       <Header />
+//       <main>
+//         <Outlet />
+//       </main>
+//       <footer>footer</footer>
+//       {isOpen && <div>Mobile Menu</div>}
+//     </>
+//   );
+// };
+
+// const Header = () => {
+//   return (
+//     <header>
+//       Header <button onClick={() => {}}>Burger</button>
+//     </header>
+//   );
+// };
+
+// const HomePage = () => {
+//   return (
+//     <>
+//       <section>
+//         <h1>Weather Page</h1>
+//         <nav>
+//           <NavLink to="/">Day</NavLink>
+//           <NavLink to="/three-days">3 Days</NavLink>
+//           <NavLink to="/week">Week</NavLink>
+//         </nav>
+//         <Outlet />
+//       </section>
+//     </>
+//   );
+// };
+
+// const NotFound = () => {
+//   return (
+//     <section>
+//       <h1>404 (Not Found)</h1>
+//     </section>
+//   );
+// };
+
+export default function App(): React.FC {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<HomePage />}>
+            <Route index element={<div>Day weather</div>} />
+            <Route path="three-days" element={<div>3 Days weather</div>} />
+            <Route path="week" element={<div>Week weather</div>} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </div>
+  );
 }
-
-export default App
