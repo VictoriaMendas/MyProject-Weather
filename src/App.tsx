@@ -1,68 +1,25 @@
-import { Route, Routes } from "react-router-dom";
-import { HomePage } from "./pages/HomePage/HomePage";
-import { Layout } from "./components/Layout/Layout";
-import { NotFound } from "./pages/NotFoundPage/NotFoundPage";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import HomePage from "./pages/HomePage/HomePage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import { OneDayWeather } from "./components/OneDayWeather/OneDayWeather";
 
-// const Layout = () => {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   return (
-//     <>
-//       <Header />
-//       <main>
-//         <Outlet />
-//       </main>
-//       <footer>footer</footer>
-//       {isOpen && <div>Mobile Menu</div>}
-//     </>
-//   );
-// };
-
-// const Header = () => {
-//   return (
-//     <header>
-//       Header <button onClick={() => {}}>Burger</button>
-//     </header>
-//   );
-// };
-
-// const HomePage = () => {
-//   return (
-//     <>
-//       <section>
-//         <h1>Weather Page</h1>
-//         <nav>
-//           <NavLink to="/">Day</NavLink>
-//           <NavLink to="/three-days">3 Days</NavLink>
-//           <NavLink to="/week">Week</NavLink>
-//         </nav>
-//         <Outlet />
-//       </section>
-//     </>
-//   );
-// };
-
-// const NotFound = () => {
-//   return (
-//     <section>
-//       <h1>404 (Not Found)</h1>
-//     </section>
-//   );
-// };
-
-export default function App(): React.FC {
+const App: React.FC = () => {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<HomePage />}>
-            <Route index element={<div>Day weather</div>} />
-            <Route path="three-days" element={<div>3 Days weather</div>} />
-            <Route path="week" element={<div>Week weather</div>} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<HomePage />}>
+          <Route index element={<OneDayWeather />} />
+          <Route path="three-days" element={<div>3-day weather</div>} />
+          <Route path="week" element={<div>1-week weather</div>} />
+          <Route path="month" element={<div>1-month weather</div>} />
+          {/* Доробити компоненти 3 дня неділя місяць */}
         </Route>
-      </Routes>
-    </div>
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
-}
+};
+
+export default App;

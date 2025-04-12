@@ -1,0 +1,49 @@
+.container {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+  background: var(--container-bg);
+}
+
+.error {
+  color: red;
+}
+
+.currentWeather {
+  margin-bottom: 20px;
+}
+
+.forecast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.forecastItem {
+  padding: 10px;
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  background: var(--background);
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  background: var(--background);
+  color: var(--text);
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

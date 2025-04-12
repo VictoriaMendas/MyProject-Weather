@@ -1,7 +1,12 @@
-export const NotFound = () => {
+import React from "react";
+import styles from "./NotFoundPage.module.css";
+
+const NotFoundPage: React.FC = () => {
   return (
-    <section>
-      <h1>404 (Not Found)</h1>
-    </section>
+    <div className={styles.container}>
+      <h1>404 - Page Not Found</h1>
+    </div>
   );
 };
+
+export default NotFoundPage;

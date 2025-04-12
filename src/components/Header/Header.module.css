@@ -1,0 +1,88 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--container-bg);
+  position: relative;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.burger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+.slider {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background: var(--container-bg);
+  color: var(--text);
+  padding: 20px;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.slider.open {
+  left: 0;
+}
+
+.cityList {
+  list-style: none;
+  padding: 0;
+}
+
+.cityItem {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--text);
+}
+
+.cityItem:hover {
+  background: var(--background);
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: var(--text);
+}
+
+.searchInput {
+  padding: 5px 10px 5px 35px;
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  background: var(--background);
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .burger {
+    display: block;
+  }
+
+  .searchForm {
+    flex: 1;
+    margin-left: 10px;
+  }
+}

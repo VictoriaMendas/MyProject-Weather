@@ -1,18 +1,15 @@
-import { useState } from "react";
-import { Header } from "../Header/Header";
+import React from "react";
 import { Outlet } from "react-router-dom";
+import styles from "./Layout.module.css";
 
-export const Layout = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const Layout: React.FC = () => {
   return (
-    <>
-      <Header />
-      <main>
-        <Outlet />
-      </main>
-      <footer>footer</footer>
-      {isOpen && <div>Mobile Menu</div>}
-    </>
+    <div className={styles.layout}>
+      <header>Header</header>
+      <Outlet />
+      <footer>Footer</footer>
+    </div>
   );
 };
+
+export default Layout;

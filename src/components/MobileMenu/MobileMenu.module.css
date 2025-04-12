@@ -1,0 +1,24 @@
+.menu {
+  padding: 20px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cityList {
+  list-style: none;
+  padding: 0;
+}
+
+.cityItem {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--text);
+}
+
+.cityItem:hover {
+  background: var(--background);
+}
