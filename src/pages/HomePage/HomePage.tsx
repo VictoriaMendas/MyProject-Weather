@@ -1,7 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-
 import styles from "./HomePage.module.css";
 import { WeatherNav } from "../../components/WeatherNav/WeatherNav";
 
@@ -9,26 +8,13 @@ import { WeatherNav } from "../../components/WeatherNav/WeatherNav";
 //   main: { temp: number; humidity: number };
 //   weather: { description: string; icon: string }[];
 //   name: string;
-// }
-
+// }find data an durl on another site
 
 const HomePage: React.FC = () => {
-
-
-
-
-
-
-
-
-
-
   return (
     <main className={styles.container}>
-
-
       {/*Зробити комплонент КарентВезер викликати тут*/}
-{/*Отримання координат потрібно в Апп виконати і зберегти цю інформацію в редаксі  */}
+      {/*Отримання координат потрібно в Апп виконати і зберегти цю інформацію в редаксі  */}
 
       {/* {currentWeather && (
         <div className={styles.currentWeather}>
@@ -45,11 +31,6 @@ const HomePage: React.FC = () => {
 
       <WeatherNav />
       <Outlet />
-
-  
-
-     
-    
     </main>
   );
 };

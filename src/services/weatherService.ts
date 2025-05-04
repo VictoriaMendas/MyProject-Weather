@@ -2,16 +2,23 @@ import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-const BASE_URL = "https://api.openweathermap.org/data/2.5";
-axios.defaults.baseURL = BASE_URL;
+// const BASE_URL = "https://api.openweathermap.org/data/2.5";
+// axios.defaults.baseURL = BASE_URL;
 
 interface IOneDayWeatherParams {
-  lat: number;
-  lon: number;
+  address: string;
 }
-export const getOneDayWeather = async ({ lat, lon }: IOneDayWeatherParams) => {
-  const response = await axios.get(
-    `/forecast/hourly?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+export const getOneDayWeather = async ({ address }: IOneDayWeatherParams) => {
+  const { data } = await axios.get(
+    `https://api.opencagedata.com/geocode/v1/json?q=${address}`,
+    {
+      params: {
+        key: API_KEY,
+        language: "en",
+        q: `${address}`,
+      },
+    }
   );
-  return response.data;
+
+  return data;
 };

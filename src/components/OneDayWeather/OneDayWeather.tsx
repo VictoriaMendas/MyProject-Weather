@@ -18,14 +18,10 @@ export const OneDayWeather = () => {
       maximumAge: 0,
     };
 
-    async function success(pos: {
-      coords: { latitude: number; longitude: number };
-    }) {
-      const crd = pos.coords;
+    async function success({ coords: { address: string } }) {
       try {
         const data = await getOneDayWeather({
-          lat: crd.latitude,
-          lon: crd.longitude,
+          address: address,
         });
         console.log(data);
       } catch (error) {
@@ -34,8 +30,7 @@ export const OneDayWeather = () => {
         }
       }
       console.log("Your current position is:");
-      console.log(`Latitude : ${crd.latitude}`);
-      console.log(`Longitude: ${crd.longitude}`);
+      console.log(`Address : ${address_only}`);
     }
 
     function error(err: { code: number; message: string }) {

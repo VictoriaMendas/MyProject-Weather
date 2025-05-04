@@ -4,6 +4,9 @@ import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { OneDayWeather } from "./components/OneDayWeather/OneDayWeather";
+import { ThreeDaysWeather } from "./components/ThreeDaysWeather/ThreeDaysWeather";
+import { OneWeekWeather } from "./components/OneWeekWeather/OneWeekWeather";
+import { OneMonthWeather } from "./components/OneMonthWeather/OneMonthWeather";
 
 const App: React.FC = () => {
   return (
@@ -11,10 +14,9 @@ const App: React.FC = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<HomePage />}>
           <Route index element={<OneDayWeather />} />
-          <Route path="three-days" element={<div>3-day weather</div>} />
-          <Route path="week" element={<div>1-week weather</div>} />
-          <Route path="month" element={<div>1-month weather</div>} />
-          {/* Доробити компоненти 3 дня неділя місяць */}
+          <Route path="three-days" element={<ThreeDaysWeather />} />
+          <Route path="week" element={<OneWeekWeather />} />
+          <Route path="month" element={<OneMonthWeather />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
