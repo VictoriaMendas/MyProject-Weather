@@ -2,8 +2,12 @@
 // import { getOneDayWeather } from "../../services/weatherService";
 
 export const ThreeDaysWeather = () => {
-  return <div>ThreeDaysWeather</div>;
-
-  //   const [weatherData, setWeatherData] = useState([]);
-  //   useEffect(()=> {}, [])
+  interface HourlyWeatherData {
+    hourly: {
+      time: string[];
+      temperature_2m: number[];
+      weather_code: number[];
+    };
+  }
+  return <div>HourlyWeatherData</div>;
 };

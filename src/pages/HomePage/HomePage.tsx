@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import styles from "./HomePage.module.css";
 import { WeatherNav } from "../../components/WeatherNav/WeatherNav";
+import { CurrentWeather } from "../../components/CurrentWeather/CurrentWeather";
 
 // interface WeatherData {
 //   main: { temp: number; humidity: number };
@@ -13,7 +14,7 @@ import { WeatherNav } from "../../components/WeatherNav/WeatherNav";
 const HomePage: React.FC = () => {
   return (
     <main className={styles.container}>
-      {/*Зробити комплонент КарентВезер викликати тут*/}
+      <CurrentWeather />
       {/*Отримання координат потрібно в Апп виконати і зберегти цю інформацію в редаксі  */}
 
       {/* {currentWeather && (

@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { getOneDayWeather } from "../../services/weatherService";
 
+interface DailyWeatherData {
+  daily: {
+    time: string[];
+    temperature_2m_max: number[];
+    temperature_2m_min: number[];
+    weather_code: number[];
+  };
+}
+
 export const OneDayWeather = () => {
   const [weatherData, setWeatherData] = useState([]);
 
   useEffect(() => {
-    // ПФДКЛЮЧИТИ РЕДАКС НА БАЗІ ТАЙПСКРИПТУ.
     // ЗРОБИТИ АНИНХРОНУ ОПЕРАЦІЮ (СЕЛЕКТ ОПЕРЕЦІОНЮ СЕРВІСИ)
     // Цей ЮзЕффект робити в Арр тільки не робити запитюІ записувати цю інфу в редакс.Налаштувати Редакс для початку.
     // зберегти або координати або населений пунк залежить від запиту який я знайду і поміняю.
@@ -18,11 +26,9 @@ export const OneDayWeather = () => {
       maximumAge: 0,
     };
 
-    async function success({ coords: { address: string } }) {
+    async function success() {
       try {
-        const data = await getOneDayWeather({
-          address: address,
-        });
+        const data = await getOneDayWeather(12);
         console.log(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -30,7 +36,7 @@ export const OneDayWeather = () => {
         }
       }
       console.log("Your current position is:");
-      console.log(`Address : ${address_only}`);
+      console.log(`Address : ${address}`);
     }
 
     function error(err: { code: number; message: string }) {
