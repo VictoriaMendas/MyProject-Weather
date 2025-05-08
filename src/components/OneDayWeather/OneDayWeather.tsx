@@ -1,49 +1,67 @@
-import { useEffect, useState } from "react";
+// ЗРОБИТИ АНИНХРОНУ ОПЕРАЦІЮ (СЕЛЕКТ ОПЕРЕЦІОНЮ СЕРВІСИ)
+// Цей ЮзЕффект робити в Арр тільки не робити запитюІ записувати цю інфу в редакс.Налаштувати Редакс для початку.
+// зберегти або координати або населений пунк залежить від запиту який я знайду і поміняю.
+// коли я отримаю координати.треба визначити координати і за цими координатами визначити населений пункт
+// з редаксу після збереження зчитувати код населеного пункту або координатюВиконувати запит і рендерити інфу.
+// ,в кожному компоненті буде свій запит і рендер той чи іншої інфи
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../../redux/store";
+import {
+  setOneDayWeather,
+  setError,
+  setLoading,
+} from "../../redux/weatherSlice";
 import { getOneDayWeather } from "../../services/weatherService";
+import styles from "../OneDayWeather/OneDayWeather.module.css";
 
-interface DailyWeatherData {
-  daily: {
-    time: string[];
-    temperature_2m_max: number[];
-    temperature_2m_min: number[];
-    weather_code: number[];
-  };
-}
-
-export const OneDayWeather = () => {
-  const [weatherData, setWeatherData] = useState([]);
+export const OneDayWeather: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { coordinates, oneDayWeather, isLoading, error } = useSelector(
+    (state: RootState) => state.weather
+  );
 
   useEffect(() => {
-    // ЗРОБИТИ АНИНХРОНУ ОПЕРАЦІЮ (СЕЛЕКТ ОПЕРЕЦІОНЮ СЕРВІСИ)
-    // Цей ЮзЕффект робити в Арр тільки не робити запитюІ записувати цю інфу в редакс.Налаштувати Редакс для початку.
-    // зберегти або координати або населений пунк залежить від запиту який я знайду і поміняю.
-    // коли я отримаю координати.треба визначити координати і за цими координатами визначити населений пункт
-    // з редаксу після збереження зчитувати код населеного пункту або координатюВиконувати запит і рендерити інфу.
-    // ,в кожному компоненті буде свій запит і рендер той чи іншої інфи
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    };
-
-    async function success() {
-      try {
-        const data = await getOneDayWeather(12);
-        console.log(data);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
+    if (coordinates) {
+      const fetchOneDayWeather = async () => {
+        dispatch(setLoading(true));
+        try {
+          const data = await getOneDayWeather(
+            coordinates.latitude,
+            coordinates.longitude
+          );
+          dispatch(setOneDayWeather(data));
+          dispatch(setError(null));
+        } catch (error) {
+          dispatch(
+            setError(
+              error instanceof Error
+                ? error.message
+                : "Failed to fetch one day weather"
+            )
+          );
+        } finally {
+          dispatch(setLoading(false));
         }
-      }
-      console.log("Your current position is:");
-      console.log(`Address : ${address}`);
+      };
+      fetchOneDayWeather();
     }
+  }, [coordinates, dispatch]);
 
-    function error(err: { code: number; message: string }) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
+  if (isLoading) return <div className={styles.loader}>Loading...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
+  if (!oneDayWeather) return null;
 
-    navigator.geolocation.getCurrentPosition(success, error, options);
-  }, []);
-  return <div>One Day Weather</div>;
+  return (
+    <div className={styles.weather}>
+      <h2>1 Day Weather</h2>
+      {oneDayWeather.hourly.time.map((time: string, index: number) => (
+        <div key={time} className={styles.forecastItem}>
+          <p>{new Date(time).toLocaleTimeString()}</p>
+          <p>Temperature: {oneDayWeather.hourly.temperature_2m[index]}°C</p>
+          <p>Weather Code: {oneDayWeather.hourly.weather_code[index]}</p>
+        </div>
+      ))}
+    </div>
+  );
 };

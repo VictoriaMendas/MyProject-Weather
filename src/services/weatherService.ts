@@ -17,12 +17,14 @@ export const getCurrentWeather = async (
         latitude,
         longitude,
         current: "temperature_2m,weather_code",
-        timezone: "Europe/Kiev",
+        timezone: "Europe/Kyiv", // Статичний часовий пояс
       },
     });
     return response.data;
-  } catch (_error) {
-    throw new Error("Current weather not available");
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "Current weather not available"
+    );
   }
 };
 
@@ -36,14 +38,16 @@ export const getOneDayWeather = async (
         latitude,
         longitude,
         hourly: "temperature_2m,weather_code",
-        timezone: "Europe/Kiev",
+        timezone: "Europe/Kyiv",
         past_days: 0,
         forecast_days: 1,
       },
     });
     return response.data;
-  } catch (_error) {
-    throw new Error("One day weather not available");
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "One day weather not available"
+    );
   }
 };
 
@@ -57,14 +61,16 @@ export const getThreeDayWeather = async (
         latitude,
         longitude,
         hourly: "temperature_2m,weather_code",
-        timezone: "Europe/Kiev",
+        timezone: "Europe/Kyiv",
         past_days: 0,
         forecast_days: 3,
       },
     });
     return response.data;
-  } catch (_error) {
-    throw new Error("Three day weather not available");
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "Three day weather not available"
+    );
   }
 };
 
@@ -78,14 +84,16 @@ export const getWeekWeather = async (
         latitude,
         longitude,
         daily: "temperature_2m_max,temperature_2m_min,weather_code",
-        timezone: "Europe/Kiev",
+        timezone: "Europe/Kyiv",
         past_days: 0,
         forecast_days: 7,
       },
     });
     return response.data;
-  } catch (_error) {
-    throw new Error("Week weather not available");
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "Week weather not available"
+    );
   }
 };
 
@@ -99,13 +107,15 @@ export const getMonthWeather = async (
         latitude,
         longitude,
         daily: "temperature_2m_max,temperature_2m_min,weather_code",
-        timezone: "Europe/Kiev",
+        timezone: "Europe/Kyiv",
         past_days: 0,
         forecast_days: 16,
       },
     });
     return response.data;
-  } catch (_error) {
-    throw new Error("Month weather not available");
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "Month weather not available"
+    );
   }
 };
