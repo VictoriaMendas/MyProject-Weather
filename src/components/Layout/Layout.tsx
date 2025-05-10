@@ -1,13 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import styles from "./Layout.module.css";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const Layout: React.FC = () => {
   return (
-    <div className={styles.layout}>
-      <header>Header</header>
-      <Outlet />
-      <footer>Footer</footer>
+    <div>
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 };

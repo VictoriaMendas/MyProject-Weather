@@ -3,52 +3,39 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background: var(--container-bg);
-  position: relative;
+  background: rgba(30, 144, 255, 0.8);
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
 }
 
 .burger {
   background: none;
   border: none;
+  color: #fff;
   cursor: pointer;
-  display: none;
 }
 
 .slider {
   position: fixed;
   top: 0;
-  left: -250px;
+  right: -100%;
   width: 250px;
   height: 100%;
-  background: var(--container-bg);
-  color: var(--text);
-  padding: 20px;
-  transition: left 0.3s ease;
-  z-index: 1000;
+  background: rgba(30, 144, 255, 0.8);
+  transition: right 0.3s ease;
+  z-index: 1001;
 }
 
 .slider.open {
-  left: 0;
-}
-
-.cityList {
-  list-style: none;
-  padding: 0;
-}
-
-.cityItem {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--text);
-}
-
-.cityItem:hover {
-  background: var(--background);
+  right: 0;
 }
 
 .searchForm {
@@ -65,24 +52,20 @@
 .searchIcon {
   position: absolute;
   left: 10px;
-  color: var(--text);
+  color: #fff;
 }
 
 .searchInput {
-  padding: 5px 10px 5px 35px;
-  border: 1px solid var(--text);
-  border-radius: 5px;
-  background: var(--background);
-  color: var(--text);
+  padding: 8px 8px 8px 35px;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  outline: none;
+  font-size: 16px;
+  width: 200px;
 }
 
-@media (max-width: 768px) {
-  .burger {
-    display: block;
-  }
-
-  .searchForm {
-    flex: 1;
-    margin-left: 10px;
-  }
+.searchInput::placeholder {
+  color: #ddd;
 }

@@ -1,60 +1,45 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
+interface Coordinates {
+  latitude: number | null;
+  longitude: number | null;
 }
 
-export interface CurrentWeatherData {
-  current: {
-    time: string;
-    temperature_2m: number;
-    weather_code: number;
-  };
+export interface HourlyWeather {
+  time: string[];
+  temperature_2m: number[];
+  weather_code: number[];
+  relative_humidity_2m: number[];
+  wind_speed_10m: number[];
 }
 
-// Тип для погодинного прогнозу (1 день, 3 дні)
-export interface HourlyWeatherData {
-  hourly: {
-    time: string[];
-    temperature_2m: number[];
-    weather_code: number[];
-  };
+export interface DailyWeather {
+  time: string[];
+  temperature_2m_max: number[];
+  temperature_2m_min: number[];
+  weather_code: number[];
+  relative_humidity_2m: number[];
+  wind_speed_10m: number[];
 }
 
-// Тип для щоденного прогнозу (тиждень, місяць)
-export interface DailyWeatherData {
-  daily: {
-    time: string[];
-    temperature_2m_max: number[];
-    temperature_2m_min: number[];
-    weather_code: number[];
-  };
-}
-
-// Тип стану для погоди
 interface WeatherState {
-  coordinates: Coordinates | null;
-  timezone: string | null;
-  currentWeather: CurrentWeatherData | null;
-  oneDayWeather: HourlyWeatherData | null;
-  threeDayWeather: HourlyWeatherData | null;
-  weekWeather: DailyWeatherData | null;
-  monthWeather: DailyWeatherData | null;
-  city: string;
+  coordinates: Coordinates;
+  locationName: string;
+  oneDayWeather: { hourly: HourlyWeather } | null;
+  threeDayWeather: { hourly: HourlyWeather } | null;
+  weekWeather: { daily: DailyWeather } | null;
+  monthWeather: { daily: DailyWeather } | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: WeatherState = {
-  coordinates: null,
-  timezone: null,
-  currentWeather: null,
+  coordinates: { latitude: null, longitude: null },
+  locationName: "",
   oneDayWeather: null,
   threeDayWeather: null,
   weekWeather: null,
   monthWeather: null,
-  city: "Kyiv",
   isLoading: false,
   error: null,
 };
@@ -66,22 +51,28 @@ const weatherSlice = createSlice({
     setCoordinates: (state, action: PayloadAction<Coordinates>) => {
       state.coordinates = action.payload;
     },
-    setCity: (state, action: PayloadAction<string>) => {
-      state.city = action.payload;
+    setLocationName: (state, action: PayloadAction<string>) => {
+      state.locationName = action.payload;
     },
-    setCurrentWeather: (state, action: PayloadAction<CurrentWeatherData>) => {
-      state.currentWeather = action.payload;
-    },
-    setOneDayWeather: (state, action: PayloadAction<HourlyWeatherData>) => {
+    setOneDayWeather: (
+      state,
+      action: PayloadAction<{ hourly: HourlyWeather }>
+    ) => {
       state.oneDayWeather = action.payload;
     },
-    setThreeDayWeather: (state, action: PayloadAction<HourlyWeatherData>) => {
+    setThreeDayWeather: (
+      state,
+      action: PayloadAction<{ hourly: HourlyWeather }>
+    ) => {
       state.threeDayWeather = action.payload;
     },
-    setWeekWeather: (state, action: PayloadAction<DailyWeatherData>) => {
+    setWeekWeather: (state, action: PayloadAction<{ daily: DailyWeather }>) => {
       state.weekWeather = action.payload;
     },
-    setMonthWeather: (state, action: PayloadAction<DailyWeatherData>) => {
+    setMonthWeather: (
+      state,
+      action: PayloadAction<{ daily: DailyWeather }>
+    ) => {
       state.monthWeather = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -95,12 +86,12 @@ const weatherSlice = createSlice({
 
 export const {
   setCoordinates,
-  setCity,
-  setCurrentWeather,
+  setLocationName,
   setOneDayWeather,
   setThreeDayWeather,
   setWeekWeather,
   setMonthWeather,
+
   setLoading,
   setError,
 } = weatherSlice.actions;

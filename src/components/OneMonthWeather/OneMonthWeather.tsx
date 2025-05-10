@@ -7,23 +7,36 @@ import {
   setLoading,
 } from "../../redux/weatherSlice";
 import { getMonthWeather } from "../../services/weatherService";
-import styles from "../OneMonthWeather/OneMonthWeather.module.css";
+import { getWeatherIcon } from "../../utils/weatherIcons";
+import styles from "./OneMonthWeather.module.css";
 
 export const OneMonthWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { coordinates, monthWeather, isLoading, error } = useSelector(
-    (state: RootState) => state.weather
-  );
+  const { coordinates, locationName, monthWeather, isLoading, error } =
+    useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    if (coordinates) {
+    if (
+      coordinates &&
+      coordinates.latitude !== null &&
+      coordinates.longitude !== null
+    ) {
       const fetchMonthWeather = async () => {
         dispatch(setLoading(true));
         try {
-          const data = await getMonthWeather(
-            coordinates.latitude,
-            coordinates.longitude
-          );
+          const data = (await getMonthWeather(
+            coordinates.latitude!,
+            coordinates.longitude!
+          )) as {
+            daily: {
+              time: string[];
+              temperature_2m_max: number[];
+              temperature_2m_min: number[];
+              weather_code: number[];
+              relative_humidity_2m: number[];
+              wind_speed_10m: number[];
+            };
+          };
           dispatch(setMonthWeather(data));
           dispatch(setError(null));
         } catch (error) {
@@ -44,19 +57,43 @@ export const OneMonthWeather: React.FC = () => {
 
   if (isLoading) return <div className={styles.loader}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
-  if (!monthWeather) return null;
+  if (!monthWeather || !monthWeather.daily) return null;
+
+  // Формуємо дані для відображення
+  const dailyData = monthWeather.daily.time.map(
+    (time: string, index: number) => ({
+      time,
+      maxTemp: monthWeather.daily.temperature_2m_max[index],
+      minTemp: monthWeather.daily.temperature_2m_min[index],
+      weatherCode: monthWeather.daily.weather_code[index],
+      humidity: monthWeather.daily.relative_humidity_2m[index],
+      windSpeed: monthWeather.daily.wind_speed_10m[index],
+    })
+  );
 
   return (
     <div className={styles.weather}>
-      <h2>Month Weather (16 Days)</h2>
-      {monthWeather.daily.time.map((time: string, index: number) => (
-        <div key={time} className={styles.forecastItem}>
-          <p>{new Date(time).toLocaleDateString()}</p>
-          <p>Max Temp: {monthWeather.daily.temperature_2m_max[index]}°C</p>
-          <p>Min Temp: {monthWeather.daily.temperature_2m_min[index]}°C</p>
-          <p>Weather Code: {monthWeather.daily.weather_code[index]}</p>
-        </div>
-      ))}
+      <h2>Month Weather (16 Days) in {locationName}</h2>
+      <div className={styles.forecastContainer}>
+        {dailyData.map((item, idx) => (
+          <div key={idx} className={styles.forecastItem}>
+            <div className={styles.forecastHeader}>
+              {getWeatherIcon(item.weatherCode, styles.weatherIcon)}
+              <p>
+                {new Date(item.time).toLocaleDateString([], {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+            <p>Max Temp: {item.maxTemp}°C</p>
+            <p>Min Temp: {item.minTemp}°C</p>
+            <p>
+              Wind: {item.windSpeed} km/h, Humidity: {item.humidity}%
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

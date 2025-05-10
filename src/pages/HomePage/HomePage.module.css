@@ -1,8 +1,8 @@
 .container {
   flex: 1;
   padding: 20px;
+
   text-align: center;
-  background: var(--container-bg);
 }
 
 .error {

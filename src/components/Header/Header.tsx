@@ -3,7 +3,7 @@ import { FaBars, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
-import { setCity } from "../../redux/weatherSlice";
+import { setLocationName } from "../../redux/weatherSlice";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
 
@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [searchCity, setSearchCity] = useState("");
   const [recentCities, setRecentCities] = useState<string[]>([]);
-  const { city } = useSelector((state: RootState) => state.weather);
+  const { locationName } = useSelector((state: RootState) => state.weather);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (searchCity.trim()) {
-      dispatch(setCity(searchCity));
+      dispatch(setLocationName(searchCity));
       saveCityToRecent(searchCity);
       navigate(`/?city=${searchCity}`);
       setIsSliderOpen(false);
@@ -46,7 +46,7 @@ const Header: React.FC = () => {
       </button>
       <div className={`${styles.slider} ${isSliderOpen ? styles.open : ""}`}>
         <MobileMenu
-          currentCity={city}
+          currentCity={locationName}
           recentCities={recentCities}
           saveCityToRecent={saveCityToRecent}
           setIsSliderOpen={setIsSliderOpen}
