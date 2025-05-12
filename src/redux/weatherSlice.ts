@@ -5,7 +5,7 @@ interface Coordinates {
   longitude: number | null;
 }
 
-export interface HourlyWeather {
+interface HourlyWeather {
   time: string[];
   temperature_2m: number[];
   weather_code: number[];
@@ -13,7 +13,7 @@ export interface HourlyWeather {
   wind_speed_10m: number[];
 }
 
-export interface DailyWeather {
+interface DailyWeather {
   time: string[];
   temperature_2m_max: number[];
   temperature_2m_min: number[];
@@ -91,7 +91,6 @@ export const {
   setThreeDayWeather,
   setWeekWeather,
   setMonthWeather,
-
   setLoading,
   setError,
 } = weatherSlice.actions;
