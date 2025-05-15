@@ -14,7 +14,7 @@ interface MobileMenuProps {
 const MobileMenu: React.FC<MobileMenuProps> = ({
   currentCity,
   recentCities,
-  saveCityToRecent,
+
   setIsSliderOpen,
   navigate,
 }) => {
@@ -23,14 +23,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       <h2 className={styles.logo}>Weather App</h2>
       <WeatherNavMobile />
       <h3>Current City: {currentCity}</h3>
-      <h3>Recent Cities:</h3>
+
       <ul className={styles.cityList}>
         {recentCities.map((city) => (
           <li
             key={city}
             className={styles.cityItem}
             onClick={() => {
-              saveCityToRecent(city);
               navigate(`/?city=${city}`);
               setIsSliderOpen(false);
             }}

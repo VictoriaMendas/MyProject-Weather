@@ -6,6 +6,7 @@ import type { RootState, AppDispatch } from "../../redux/store";
 import { setLocationName } from "../../redux/weatherSlice";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
+import WeatherNavMobile from "../WeatherNavMobile/WeatherNavMobile";
 
 const Header: React.FC = () => {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
@@ -45,6 +46,7 @@ const Header: React.FC = () => {
         <FaBars size={24} />
       </button>
       <div className={`${styles.slider} ${isSliderOpen ? styles.open : ""}`}>
+        <WeatherNavMobile />
         <MobileMenu
           currentCity={locationName}
           recentCities={recentCities}

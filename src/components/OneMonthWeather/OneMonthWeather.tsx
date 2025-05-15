@@ -1,99 +1,64 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../../redux/store";
-import {
-  setMonthWeather,
-  setError,
-  setLoading,
-} from "../../redux/weatherSlice";
-import { getMonthWeather } from "../../services/weatherService";
-import { getWeatherIcon } from "../../utils/weatherIcons";
-import styles from "./OneMonthWeather.module.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-export const OneMonthWeather: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { coordinates, locationName, monthWeather, isLoading, error } =
-    useSelector((state: RootState) => state.weather);
+interface DailyWeather {
+  time: string[];
+  temperature_2m_max: number[];
+  temperature_2m_min: number[];
+  weather_code: number[];
+}
+
+const OneMonthWeather: React.FC = () => {
+  const [weather, setWeather] = useState<DailyWeather | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMonthWeather = async (latitude: number, longitude: number) => {
+    try {
+      const response = await axios.get(
+        "https://api.open-meteo.com/v1/forecast",
+        {
+          params: {
+            latitude,
+            longitude,
+            daily: "temperature_2m_max,temperature_2m_min,weather_code",
+            forecast_days: 14, // Змінили на 14 днів (в межах ліміту API)
+            timezone: "auto",
+          },
+        }
+      );
+      setWeather(response.data.daily);
+    } catch (err) {
+      setError("Не вдалося отримати дані про погоду");
+      console.error("Помилка при отриманні погоди:", err);
+    }
+  };
 
   useEffect(() => {
-    if (
-      coordinates &&
-      coordinates.latitude !== null &&
-      coordinates.longitude !== null
-    ) {
-      const fetchMonthWeather = async () => {
-        dispatch(setLoading(true));
-        try {
-          const data = (await getMonthWeather(
-            coordinates.latitude!,
-            coordinates.longitude!
-          )) as {
-            daily: {
-              time: string[];
-              temperature_2m_max: number[];
-              temperature_2m_min: number[];
-              weather_code: number[];
-              relative_humidity_2m: number[];
-              wind_speed_10m: number[];
-            };
-          };
-          dispatch(setMonthWeather(data));
-          dispatch(setError(null));
-        } catch (error) {
-          dispatch(
-            setError(
-              error instanceof Error
-                ? error.message
-                : "Failed to fetch month weather"
-            )
-          );
-        } finally {
-          dispatch(setLoading(false));
-        }
-      };
-      fetchMonthWeather();
-    }
-  }, [coordinates, dispatch]);
+    // Координати для Києва
+    fetchMonthWeather(50.4500336, 30.5241361);
+  }, []);
 
-  if (isLoading) return <div className={styles.loader}>Loading...</div>;
-  if (error) return <div className={styles.error}>{error}</div>;
-  if (!monthWeather || !monthWeather.daily) return null;
+  if (error) {
+    return <div>Помилка: {error}</div>;
+  }
 
-  // Формуємо дані для відображення
-  const dailyData = monthWeather.daily.time.map(
-    (time: string, index: number) => ({
-      time,
-      maxTemp: monthWeather.daily.temperature_2m_max[index],
-      minTemp: monthWeather.daily.temperature_2m_min[index],
-      weatherCode: monthWeather.daily.weather_code[index],
-      humidity: monthWeather.daily.relative_humidity_2m[index],
-      windSpeed: monthWeather.daily.wind_speed_10m[index],
-    })
-  );
+  if (!weather) {
+    return <div>Завантаження...</div>;
+  }
 
   return (
-    <div className={styles.weather}>
-      <h2>Month Weather (16 Days) in {locationName}</h2>
-      <div className={styles.forecastContainer}>
-        {dailyData.map((item, idx) => (
-          <div key={idx} className={styles.forecastItem}>
-            <div className={styles.forecastHeader}>
-              {getWeatherIcon(item.weatherCode, styles.weatherIcon)}
-              <p>
-                {new Date(item.time).toLocaleDateString([], {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-            <p>Max Temp: {item.maxTemp}°C</p>
-            <p>Min Temp: {item.minTemp}°C</p>
-            <p>
-              Wind: {item.windSpeed} km/h, Humidity: {item.humidity}%
-            </p>
-          </div>
-        ))}
-      </div>
+    <div>
+      <h2>Прогноз погоди на 14 днів</h2>
+      {weather.time.map((date, index) => (
+        <div key={date}>
+          <p>Дата: {date}</p>
+          <p>Макс. температура: {weather.temperature_2m_max[index]}°C</p>
+          <p>Мін. температура: {weather.temperature_2m_min[index]}°C</p>
+          <p>Код погоди: {weather.weather_code[index]}</p>
+        </div>
+      ))}
     </div>
   );
 };
+
+export default OneMonthWeather;
