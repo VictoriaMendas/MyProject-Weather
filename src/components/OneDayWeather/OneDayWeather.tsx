@@ -1,12 +1,99 @@
+// import React, { useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import type { AppDispatch, RootState } from "../../redux/store";
+// import {
+//   setOneDayWeather,
+//   setError,
+//   setLoading,
+// } from "../../redux/weatherSlice";
+// import axios from "axios";
+// import styles from "./OneDayWeather.module.css";
+
+// export const OneDayWeather: React.FC = () => {
+//   const dispatch = useDispatch<AppDispatch>();
+//   const { coordinates, locationName, oneDayWeather, isLoading, error } =
+//     useSelector((state: RootState) => state.weather);
+
+//   useEffect(() => {
+//     const fetchOneDayWeather = async () => {
+//       if (!coordinates.latitude || !coordinates.longitude) return;
+
+//       dispatch(setLoading(true));
+//       try {
+//         const today = new Date().toISOString().split("T")[0]; // Сьогоднішня дата у форматі YYYY-MM-DD
+//         const response = await axios.get(
+//           "https://api.open-meteo.com/v1/forecast",
+//           {
+//             params: {
+//               latitude: coordinates.latitude,
+//               longitude: coordinates.longitude,
+//               hourly: "temperature_2m,wind_speed_10m,relative_humidity_2m",
+//               start_date: today,
+//               end_date: today,
+//               timezone: "auto",
+//             },
+//           }
+//         );
+
+//         const hourlyData = response.data.hourly;
+//         dispatch(setOneDayWeather({ hourly: hourlyData }));
+//         dispatch(setError(null));
+//       } catch (err) {
+//         dispatch(
+//           setError(
+//             err instanceof Error
+//               ? err.message
+//               : "Failed to fetch one day weather"
+//           )
+//         );
+//       } finally {
+//         dispatch(setLoading(false));
+//       }
+//     };
+
+//     fetchOneDayWeather();
+//   }, [coordinates, dispatch]);
+
+//   const formatTime = (timeStr: string) => {
+//     return new Date(timeStr).toLocaleString("en-US", {
+//       hour: "2-digit",
+//       minute: "2-digit",
+//     });
+//   };
+
+//   if (isLoading) return <div className={styles.loader}>Loading...</div>;
+//   if (error) return <div className={styles.error}>{error}</div>;
+//   if (!oneDayWeather) return null;
+
+//   return (
+//     <div className={styles.weather}>
+//       <h2>Today's Weather in {locationName}</h2>
+//       <div className={styles.forecastContainer}>
+//         {oneDayWeather.hourly.time.map((time, index) => (
+//           <div key={time} className={styles.forecastItem}>
+//             <div className={styles.forecastHeader}>
+//               <p>{formatTime(time)}</p>
+//             </div>
+//             <p>Temperature: {oneDayWeather.hourly.temperature_2m[index]}°C</p>
+//             <p>
+//               Wind: {oneDayWeather.hourly.wind_speed_10m[index]} km/h, Humidity:{" "}
+//               {oneDayWeather.hourly.relative_humidity_2m[index]}%
+//             </p>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
 import {
   setOneDayWeather,
   setError,
   setLoading,
 } from "../../redux/weatherSlice";
-import { getOneDayWeather } from "../../services/weatherService";
+import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./OneDayWeather.module.css";
 
@@ -16,76 +103,74 @@ export const OneDayWeather: React.FC = () => {
     useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    if (
-      coordinates &&
-      coordinates.latitude !== null &&
-      coordinates.longitude !== null
-    ) {
-      const fetchOneDayWeather = async () => {
-        dispatch(setLoading(true));
-        try {
-          const data = await getOneDayWeather(
-            coordinates.latitude!,
-            coordinates.longitude!
-          );
-          dispatch(setOneDayWeather(data));
-          dispatch(setError(null));
-        } catch (error) {
-          dispatch(
-            setError(
-              error instanceof Error
-                ? error.message
-                : "Failed to fetch one day weather"
-            )
-          );
-        } finally {
-          dispatch(setLoading(false));
-        }
-      };
-      fetchOneDayWeather();
-    }
+    const fetchOneDayWeather = async () => {
+      if (!coordinates.latitude || !coordinates.longitude) return;
+
+      dispatch(setLoading(true));
+      try {
+        const today = new Date().toISOString().split("T")[0];
+        const response = await axios.get(
+          "https://api.open-meteo.com/v1/forecast",
+          {
+            params: {
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+              hourly:
+                "temperature_2m,wind_speed_10m,relative_humidity_2m,weather_code",
+              start_date: today,
+              end_date: today,
+              timezone: "auto",
+            },
+          }
+        );
+
+        const hourlyData = response.data.hourly;
+        dispatch(setOneDayWeather({ hourly: hourlyData }));
+        dispatch(setError(null));
+      } catch (err) {
+        dispatch(
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Failed to fetch one day weather"
+          )
+        );
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    fetchOneDayWeather();
   }, [coordinates, dispatch]);
+
+  const formatTime = (timeStr: string) => {
+    return new Date(timeStr).toLocaleString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   if (isLoading) return <div className={styles.loader}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
-  if (!oneDayWeather || !oneDayWeather.hourly) return null;
-
-  // Поточний час
-  const now = new Date();
-  const currentHour = now.getHours();
-
-  // Фільтруємо дані, створюючи новий масив об’єктів
-  const filteredData = oneDayWeather.hourly.time
-    .map((time: string, index: number) => ({
-      time,
-      temperature: oneDayWeather.hourly.temperature_2m[index],
-      weatherCode: oneDayWeather.hourly.weather_code[index],
-      humidity: oneDayWeather.hourly.relative_humidity_2m[index],
-      windSpeed: oneDayWeather.hourly.wind_speed_10m[index],
-    }))
-    .filter((item) => {
-      const hour = new Date(item.time).getHours();
-      return hour >= currentHour;
-    });
+  if (!oneDayWeather) return null;
 
   return (
     <div className={styles.weather}>
-      <h2>1 Day Weather in {locationName}</h2>
+      <h2>Today's Weather in {locationName}</h2>
       <div className={styles.forecastContainer}>
-        {filteredData.map((item, idx) => (
-          <div key={idx} className={styles.forecastItem}>
+        {oneDayWeather.hourly.time.map((time, index) => (
+          <div key={time} className={styles.forecastItem}>
             <div className={styles.forecastHeader}>
-              {getWeatherIcon(item.weatherCode, styles.weatherIcon)}
-              <p>
-                {new Date(item.time).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
+              {getWeatherIcon(
+                oneDayWeather.hourly.weather_code[index],
+                styles.weatherIcon
+              )}
+              <p>{formatTime(time)}</p>
             </div>
-            <p>Temperature: {item.temperature}°C</p>
+            <p>Temperature: {oneDayWeather.hourly.temperature_2m[index]}°C</p>
             <p>
-              Wind: {item.windSpeed} km/h, Humidity: {item.humidity}%
+              Wind: {oneDayWeather.hourly.wind_speed_10m[index]} km/h, Humidity:{" "}
+              {oneDayWeather.hourly.relative_humidity_2m[index]}%
             </p>
           </div>
         ))}

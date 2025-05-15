@@ -1,0 +1,115 @@
+.weather {
+  position: relative;
+  padding: 40px;
+  margin: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(135, 206, 250, 0.3),
+    rgba(0, 47, 108, 0.3)
+  ); /* Блакитно-синій градієнт */
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.weather::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("https://www.transparenttextures.com/patterns/weather.png");
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.weather h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.weatherMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.iconContainer {
+  animation: bounce 2s infinite;
+}
+
+.weatherIcon {
+  font-size: 80px;
+  color: #fff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.tempContainer {
+  display: flex;
+  align-items: center;
+}
+
+.temperature {
+  font-size: 60px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.detailsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.detail {
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loader {
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+.error {
+  text-align: center;
+  color: #ff4d4d;
+  font-size: 18px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

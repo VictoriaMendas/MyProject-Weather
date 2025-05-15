@@ -15,11 +15,8 @@
 
 .forecastContainer {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(150px, 1fr)
-  ); /* Картки в рядку, мінімум 150px */
-  gap: 15px; /* Відстань між картками */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
 }
 
 .forecastItem {
@@ -42,6 +39,7 @@
 .weatherIcon {
   font-size: 30px;
   color: #fff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Легка тінь */
 }
 
 .loader {

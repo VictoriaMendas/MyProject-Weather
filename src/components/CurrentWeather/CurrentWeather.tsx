@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import axios from "axios";
 import { AppDispatch, RootState } from "../../redux/store";
 import {
@@ -8,6 +7,8 @@ import {
   setError,
   setLoading,
 } from "../../redux/weatherSlice";
+import { getWeatherIcon } from "../../utils/weatherIcons";
+import styles from "./CurrentWeather.module.css";
 
 interface CurrentWeatherData {
   temperature: number;
@@ -25,7 +26,7 @@ export const CurrentWeather: React.FC = () => {
 
   useEffect(() => {
     const fetchCurrentWeather = async () => {
-      if (!coordinates.latitude || !coordinates.longitude) return; // Якщо немає координат, пропускаємо запит
+      if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
       try {
@@ -69,18 +70,33 @@ export const CurrentWeather: React.FC = () => {
     fetchCurrentWeather();
   }, [coordinates, dispatch]);
 
-  if (isLoading) return <div>Loading current weather...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading)
+    return <div className={styles.loader}>Loading current weather...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
   if (!currentWeather) return <div>No current weather data available</div>;
 
   return (
-    <div>
+    <div className={styles.weather}>
       <h2>Current Weather</h2>
-      <p>Temperature: {currentWeather.temperature}°C</p>
-      <p>Weather Code: {currentWeather.weather_code}</p>
-      <p>Wind Speed: {currentWeather.wind_speed} km/h</p>
-      <p>Humidity: {currentWeather.humidity}%</p>
-      <p>Time: {new Date(currentWeather.time).toLocaleString()}</p>
+      <div className={styles.weatherMain}>
+        <div className={styles.iconContainer}>
+          {getWeatherIcon(currentWeather.weather_code, styles.weatherIcon)}
+        </div>
+        <div className={styles.tempContainer}>
+          <p className={styles.temperature}>{currentWeather.temperature}°C</p>
+        </div>
+      </div>
+      <div className={styles.detailsContainer}>
+        <span className={styles.detail}>
+          Wind: {currentWeather.wind_speed} km/h
+        </span>
+        <span className={styles.detail}>
+          Humidity: {currentWeather.humidity}%
+        </span>
+        <span className={styles.detail}>
+          Time: {new Date(currentWeather.time).toLocaleString()}
+        </span>
+      </div>
     </div>
   );
 };
