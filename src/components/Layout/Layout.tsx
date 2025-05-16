@@ -17,15 +17,17 @@
 
 // export default Layout;
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { Header } from "../Header/Header";
 
 const Layout: React.FC = () => {
   return (
     <div>
-      <nav>
+      <Header />
+      {/* <nav>
         <Link to="/">1 Day</Link> | <Link to="/three-days">3 Days</Link> |{" "}
         <Link to="/week">1 Week</Link> | <Link to="/month">1 Month</Link>
-      </nav>
+      </nav> */}
       <Outlet />
     </div>
   );

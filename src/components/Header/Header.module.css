@@ -1,71 +1,197 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background: rgba(30, 144, 255, 0.8);
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #1e3a8a, #6b21a8);
   color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   z-index: 1000;
 }
 
-.logo {
+.logo span {
   font-size: 24px;
   font-weight: bold;
-}
-
-.burger {
-  background: none;
-  border: none;
   color: #fff;
-  cursor: pointer;
-}
-
-.slider {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 250px;
-  height: 100%;
-  background: rgba(30, 144, 255, 0.8);
-  transition: right 0.3s ease;
-  z-index: 1001;
-}
-
-.slider.open {
-  right: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .searchForm {
-  display: flex;
-  align-items: center;
-}
-
-.searchContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.searchIcon {
-  position: absolute;
-  left: 10px;
-  color: #fff;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
 }
 
 .searchInput {
-  padding: 8px 8px 8px 35px;
-  border: 1px solid #fff;
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
   border-radius: 20px;
+  font-size: 16px;
+  outline: none;
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  outline: none;
-  font-size: 16px;
-  width: 200px;
 }
 
 .searchInput::placeholder {
-  color: #ddd;
+  color: #ccc;
+}
+
+.burger {
+  cursor: pointer;
+}
+
+.burgerIcon {
+  color: #fff;
+  font-size: 30px;
+}
+
+/* Слайдер */
+.slider {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 300px;
+  background: linear-gradient(135deg, #1e3a8a, #6b21a8);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.sliderOpen {
+  transform: translateX(0);
+}
+
+.sliderContent {
+  padding: 40px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sliderContent h3 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sliderNav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sliderNav a {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.sliderNav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Анімація хмарок */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cloud1,
+.cloud2,
+.cloud3 {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.4) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(10px);
+  animation: moveClouds linear infinite;
+}
+
+.cloud1::before,
+.cloud2::before,
+.cloud3::before {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  top: -20px;
+  left: 20px;
+  filter: blur(10px);
+}
+
+.cloud1::after,
+.cloud2::after,
+.cloud3::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 30px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  top: 10px;
+  left: 60px;
+  filter: blur(10px);
+}
+
+.cloud1 {
+  top: 20%;
+  left: -120px;
+  animation-duration: 20s;
+}
+
+.cloud2 {
+  top: 50%;
+  left: -120px;
+  animation-duration: 30s;
+  animation-delay: 5s;
+}
+
+.cloud3 {
+  top: 80%;
+  left: -120px;
+  animation-duration: 25s;
+  animation-delay: 10s;
+}
+
+@keyframes moveClouds {
+  0% {
+    transform: translateX(-120px);
+  }
+  100% {
+    transform: translateX(420px);
+  }
 }

@@ -6,7 +6,7 @@
     135deg,
     rgba(135, 206, 250, 0.3),
     rgba(0, 47, 108, 0.3)
-  ); /* Блакитно-синій градієнт */
+  );
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color: #fff;
@@ -49,9 +49,9 @@
 }
 
 .weatherIcon {
-  font-size: 80px;
+  font-size: 80px; /* Залишаємо розмір */
   color: #fff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Тільки тінь */
 }
 
 .tempContainer {

@@ -37,9 +37,9 @@
 }
 
 .weatherIcon {
-  font-size: 30px;
+  font-size: 30px; /* Залишаємо розмір */
   color: #fff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Легка тінь */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Тільки тінь */
 }
 
 .loader {

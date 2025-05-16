@@ -20,9 +20,8 @@ interface CurrentWeatherData {
 
 export const CurrentWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { coordinates, currentWeather, error, isLoading } = useSelector(
-    (state: RootState) => state.weather
-  );
+  const { coordinates, currentWeather, locationName, error, isLoading } =
+    useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
     const fetchCurrentWeather = async () => {
@@ -77,7 +76,7 @@ export const CurrentWeather: React.FC = () => {
 
   return (
     <div className={styles.weather}>
-      <h2>Current Weather</h2>
+      <h2>Current Weather in {locationName || "Unknown Location"}</h2>
       <div className={styles.weatherMain}>
         <div className={styles.iconContainer}>
           {getWeatherIcon(currentWeather.weather_code, styles.weatherIcon)}
