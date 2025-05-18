@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { setCoordinates, setLocationName } from "../../redux/weatherSlice";
+import {
+  setCoordinates,
+  setLocationName,
+  setOneDayWeather,
+  setThreeDayWeather,
+  setWeekWeather,
+  setMonthWeather,
+} from "../../redux/weatherSlice";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { WiThermometer } from "react-icons/wi";
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,15 +24,25 @@ export const Header: React.FC = () => {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Search triggered:", searchCity);
     if (!searchCity) return;
 
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchCity
-        )}`
+      const response = await axios.get(
+        "https://nominatim.openstreetmap.org/search",
+        {
+          params: {
+            format: "json",
+            q: searchCity,
+            limit: 1,
+          },
+          headers: {
+            "User-Agent": "WeatherApp/1.0 (your-email@example.com)",
+          },
+        }
       );
-      const data = await response.json();
+
+      const data = response.data;
       if (data && data.length > 0) {
         const { lat, lon, display_name } = data[0];
         dispatch(
@@ -44,11 +63,20 @@ export const Header: React.FC = () => {
   };
 
   const toggleSlider = () => {
+    console.log("Toggle slider:", !isSliderOpen);
     setIsSliderOpen(!isSliderOpen);
   };
 
   const closeSlider = () => {
     setIsSliderOpen(false);
+  };
+
+  const clearWeatherData = (forecastType: string) => {
+    // Очищаємо попередні дані перед переходом
+    if (forecastType !== "one-day") dispatch(setOneDayWeather(null));
+    if (forecastType !== "three-days") dispatch(setThreeDayWeather(null));
+    if (forecastType !== "one-week") dispatch(setWeekWeather(null));
+    if (forecastType !== "one-month") dispatch(setMonthWeather(null));
   };
 
   useEffect(() => {
@@ -77,7 +105,7 @@ export const Header: React.FC = () => {
     <>
       <header className={styles.header}>
         <div className={styles.logo}>
-          {/* Тимчасово текстовий логотип */}
+          <WiThermometer size={30} />
           <span>WeatherApp</span>
         </div>
         <form onSubmit={handleSearch} className={styles.searchForm}>
@@ -101,16 +129,40 @@ export const Header: React.FC = () => {
         <div className={styles.sliderContent}>
           <h3>{locationName || "Current City"}</h3>
           <nav className={styles.sliderNav}>
-            <Link to="/one-day" onClick={closeSlider}>
+            <Link
+              to="/one-day"
+              onClick={() => {
+                clearWeatherData("one-day");
+                closeSlider();
+              }}
+            >
               1 Day Forecast
             </Link>
-            <Link to="/three-days" onClick={closeSlider}>
+            <Link
+              to="/three-days"
+              onClick={() => {
+                clearWeatherData("three-days");
+                closeSlider();
+              }}
+            >
               3 Day Forecast
             </Link>
-            <Link to="/one-week" onClick={closeSlider}>
+            <Link
+              to="/one-week"
+              onClick={() => {
+                clearWeatherData("one-week");
+                closeSlider();
+              }}
+            >
               1 Week Forecast
             </Link>
-            <Link to="/one-month" onClick={closeSlider}>
+            <Link
+              to="/one-month"
+              onClick={() => {
+                clearWeatherData("one-month");
+                closeSlider();
+              }}
+            >
               1 Month Forecast
             </Link>
           </nav>

@@ -1,12 +1,10 @@
 // context/ThemeContext.tsx
-// context/ThemeContext.tsx
 import React, { createContext, useContext, useState, useMemo } from "react";
-import Particles from "react-particles";
-import { loadSlim } from "@tsparticles/slim"; // Змінено з loadFull на loadSlim
-import type { ISourceOptions } from "@tsparticles/engine";
+import { motion } from "framer-motion";
 import styles from "./ThemeContext.module.css";
+import { FaStar, FaGlobe } from "react-icons/fa";
+import { GiGalaxy } from "react-icons/gi";
 
-// Типи для контексту
 interface ThemeContextType {
   theme: "light" | "dark";
   toggleTheme: () => void;
@@ -22,118 +20,6 @@ export const useTheme = () => {
   return context;
 };
 
-// Опції для частинок у світлій темі (хмарки)
-const lightThemeParticles: ISourceOptions = {
-  particles: {
-    number: {
-      value: 15,
-      density: {
-        enable: true,
-        value_area: 800,
-      },
-    },
-    shape: {
-      type: "circle",
-    },
-    opacity: {
-      value: 0.5,
-    },
-    size: {
-      value: { min: 20, max: 50 },
-    },
-    move: {
-      enable: true,
-      speed: 1,
-      direction: "right",
-      random: false,
-      straight: false,
-      outModes: {
-        default: "out",
-      },
-    },
-    color: {
-      value: "rgba(255, 255, 255, 0.5)",
-    },
-  },
-  interactivity: {
-    events: {
-      onHover: {
-        enable: true,
-        mode: "repulse",
-      },
-    },
-    modes: {
-      repulse: {
-        distance: 100,
-        duration: 0.4,
-      },
-    },
-  },
-};
-
-// Опції для частинок у темній темі (зірки та планети)
-const darkThemeParticles: ISourceOptions = {
-  particles: {
-    number: {
-      value: 100,
-      density: {
-        enable: true,
-        value_area: 800,
-      },
-    },
-    shape: {
-      type: ["circle", "image"],
-      image: [
-        {
-          src: "https://www.pngall.com/wp-content/uploads/10/Saturn-PNG-Images-HD.png",
-          width: 32,
-          height: 32,
-        },
-      ],
-    },
-    opacity: {
-      value: { min: 0.4, max: 0.8 },
-      animation: {
-        enable: true,
-        speed: 1,
-        sync: false,
-      },
-    },
-    size: {
-      value: { min: 1, max: 10 },
-    },
-    move: {
-      enable: true,
-      speed: 0.5,
-      direction: "none",
-      random: true,
-      straight: false,
-      outModes: {
-        default: "out",
-      },
-    },
-    color: {
-      value: ["#ffffff", "#ffcc00", "#ff3300"],
-    },
-  },
-  interactivity: {
-    events: {
-      onHover: {
-        enable: true,
-        mode: "connect",
-      },
-    },
-    modes: {
-      connect: {
-        distance: 100,
-        links: {
-          opacity: 0.5,
-        },
-      },
-    },
-  },
-};
-
 interface ThemeProviderProps {
   children: React.ReactNode;
 }
@@ -145,16 +31,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  const particlesInit = async (engine: any) => {
-    await loadSlim(engine); // Змінено з loadFull на loadSlim
-  };
-
   const backgroundStyle = useMemo(
     () => ({
       background:
         theme === "light"
-          ? "linear-gradient(135deg, rgba(135, 206, 250, 0.8), rgba(0, 47, 108, 0.8))"
+          ? "linear-gradient(135deg, rgba(135, 206, 250, 1), rgba(0, 47, 108, 1))"
           : "linear-gradient(135deg, #0d0015, #1e3a8a)",
+      transition: "background 0.5s ease",
     }),
     [theme]
   );
@@ -162,12 +45,83 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <div className={styles.themeWrapper} style={backgroundStyle}>
-        <Particles
-          id="tsparticles"
-          init={particlesInit}
-          options={theme === "light" ? lightThemeParticles : darkThemeParticles}
-          className={styles.particles}
-        />
+        {theme === "light" ? (
+          <>
+            <motion.div
+              className={styles.cloud}
+              initial={{ x: -100 }}
+              animate={{ x: "100vw" }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              style={{ top: "20%" }}
+            />
+            <motion.div
+              className={styles.cloud}
+              initial={{ x: -100 }}
+              animate={{ x: "100vw" }}
+              transition={{
+                duration: 30,
+                repeat: Infinity,
+                ease: "linear",
+                delay: 5,
+              }}
+              style={{ top: "50%" }}
+            />
+          </>
+        ) : (
+          <>
+            <motion.div
+              className={styles.milkyway1}
+              initial={{ x: -200 }}
+              animate={{ x: "100vw" }}
+              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+              style={{ top: "10%" }}
+            >
+              <GiGalaxy size={150} color="rgba(255, 255, 255, 0.5)" />
+            </motion.div>
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={styles.star}
+                style={{
+                  top: `${Math.random() * 100}vh`,
+                  left: `${Math.random() * 100}vw`,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              >
+                <FaStar size={5} color="#fff" />
+              </motion.div>
+            ))}
+            <motion.div
+              className={styles.planet1}
+              initial={{ x: -100 }}
+              animate={{ x: "100vw" }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              style={{ top: "30%" }}
+            >
+              <FaGlobe size={40} color="#ffcc00" />
+            </motion.div>
+            <motion.div
+              className={styles.planet2}
+              initial={{ x: -100 }}
+              animate={{ x: "100vw" }}
+              transition={{
+                duration: 50,
+                repeat: Infinity,
+                ease: "linear",
+                delay: 10,
+              }}
+              style={{ top: "60%" }}
+            >
+              <FaGlobe size={60} color="#00ccff" />
+            </motion.div>
+          </>
+        )}
         <button className={styles.themeToggle} onClick={toggleTheme}>
           {theme === "light" ? "Switch to Dark Theme" : "Switch to Light Theme"}
         </button>

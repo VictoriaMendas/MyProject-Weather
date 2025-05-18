@@ -1,18 +1,4 @@
-.themeWrapper {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-.particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
+/* context/ThemeContext.module.css */
 .themeToggle {
   position: fixed;
   top: 80px;
@@ -23,10 +9,80 @@
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  z-index: 1001;
+  z-index: 1001; /* Вище за Header */
   transition: background 0.3s;
 }
 
 .themeToggle:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* Хмарки */
+.cloud {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(8px);
+  z-index: -1; /* На задньому плані */
+}
+
+.cloud::before {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.6) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  top: -20px;
+  left: 20px;
+  filter: blur(8px);
+}
+
+.cloud::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 30px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.4) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  top: 10px;
+  left: 60px;
+  filter: blur(8px);
+}
+
+/* Зірки */
+.star {
+  position: absolute;
+  z-index: -1; /* На задньому плані */
+}
+
+/* Планети */
+.planet1 {
+  position: absolute;
+  z-index: -1; /* На задньому плані */
+}
+
+.planet2 {
+  position: absolute;
+  z-index: -1; /* На задньому плані */
+}
+
+/* Галактики */
+.milkyway1 {
+  position: absolute;
+  z-index: -1; /* На задньому плані */
 }
