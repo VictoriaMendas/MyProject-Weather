@@ -30,14 +30,13 @@
 
 // const App: React.FC = () => {
 //   const dispatch = useDispatch<AppDispatch>();
-
 //   const [searchParams, setSearchParams] = useSearchParams();
-
 //   const locationName = useSelector(
 //     (state: RootState) => state.weather.locationName
 //   );
 //   const cityFromUrl = searchParams.get("city") || locationName;
 
+//   // useEffect #1 (не чіпаємо)
 //   useEffect(() => {
 //     if (!cityFromUrl) return;
 //     const fetchCoordinatesAndLocation = async () => {
@@ -75,6 +74,7 @@
 //     fetchCoordinatesAndLocation();
 //   }, [cityFromUrl, dispatch]);
 
+//   // useEffect #2 (не чіпаємо)
 //   useEffect(() => {
 //     if (!locationName) return;
 //     setSearchParams({ city: locationName });
@@ -85,17 +85,30 @@
 //       return;
 //     }
 
-//   }, []);
+//     if (navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//         (position) => {
+//           const { latitude, longitude } = position.coords;
+//           dispatch(setCoordinates({ latitude, longitude })); // Зберігаємо координати
+//         },
+//         (error) => {
+//           dispatch(setError(error.message || "Failed to get current position"));
+//         }
+//       );
+//     } else {
+//       dispatch(setError("Geolocation is not supported by this browser"));
+//     }
+//   }, [locationName, dispatch]); // Залежність від locationName, щоб реагувати на його зміну
 
 //   return (
 //     <div className={styles.app}>
 //       <Routes>
 //         <Route path="/" element={<Layout />}>
 //           <Route path="/" element={<HomePage />}>
-//             <Route index element={<OneDayWeather />} />
+//             <Route index path="one-day" element={<OneDayWeather />} />
 //             <Route path="three-days" element={<ThreeDaysWeather />} />
-//             <Route path="week" element={<OneWeekWeather />} />
-//             <Route path="month" element={<OneMonthWeather />} />
+//             <Route path="one-week" element={<OneWeekWeather />} />
+//             <Route path="one-month" element={<OneMonthWeather />} />
 //           </Route>
 //           <Route path="*" element={<NotFoundPage />} />
 //         </Route>
@@ -121,6 +134,10 @@ import { OneWeekWeather } from "./components/OneWeekWeather/OneWeekWeather";
 import { OneMonthWeather } from "./components/OneMonthWeather/OneMonthWeather";
 import styles from "./App.module.css";
 import { useSelector } from "react-redux";
+import { motion } from "framer-motion"; // Додаємо для анімації
+import { WiCloud } from "react-icons/wi"; // Іконка хмарки
+import { FaStar } from "react-icons/fa"; // Іконки зірок і планет
+import { useTheme } from "./context/ThemeContext"; // Використовуємо ThemeContext
 
 interface OpenCageResponse {
   results: Array<{
@@ -143,6 +160,7 @@ const App: React.FC = () => {
     (state: RootState) => state.weather.locationName
   );
   const cityFromUrl = searchParams.get("city") || locationName;
+  const { theme } = useTheme(); // Отримуємо поточну тему
 
   // useEffect #1 (не чіпаємо)
   useEffect(() => {
@@ -213,24 +231,108 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />}>
-            <Route index element={<OneDayWeather />} />
+            <Route index path="one-day" element={<OneDayWeather />} />
             <Route path="three-days" element={<ThreeDaysWeather />} />
-            <Route path="week" element={<OneWeekWeather />} />
-            <Route path="month" element={<OneMonthWeather />} />
+            <Route path="one-week" element={<OneWeekWeather />} />
+            <Route path="one-month" element={<OneMonthWeather />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
+
+      {/* Додаємо плаваючі іконки */}
+      {theme === "light" ? (
+        <>
+          {/* Хмарка 1 */}
+          <motion.div
+            className={styles.cloud}
+            initial={{ x: "-10vw" }}
+            animate={{ x: "110vw" }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{ top: "20%" }}
+          >
+            <WiCloud size={80} color="rgba(255, 255, 255, 0.8)" />
+          </motion.div>
+          {/* Хмарка 2 */}
+          <motion.div
+            className={styles.cloud}
+            initial={{ x: "-10vw" }}
+            animate={{ x: "110vw" }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 5,
+            }}
+            style={{ top: "40%" }}
+          >
+            <WiCloud size={60} color="rgba(255, 255, 255, 0.7)" />
+          </motion.div>
+
+          <motion.div
+            className={styles.cloud}
+            initial={{ x: "-10vw" }}
+            animate={{ x: "110vw" }}
+            transition={{
+              duration: 30,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 10,
+            }}
+            style={{ top: "60%" }}
+          >
+            <WiCloud size={100} color="rgba(255, 255, 255, 0.6)" />
+          </motion.div>
+          <motion.div
+            className={styles.cloud}
+            initial={{ x: "-10vw" }}
+            animate={{ x: "110vw" }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{ top: "20%" }}
+          >
+            <WiCloud size={80} color="rgba(255, 255, 255, 0.8)" />
+          </motion.div>
+          <motion.div
+            className={styles.cloud}
+            initial={{ x: "-10vw" }}
+            animate={{ x: "110vw" }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 5,
+            }}
+            style={{ top: "40%" }}
+          >
+            <WiCloud size={60} color="rgba(255, 255, 255, 0.7)" />
+          </motion.div>
+        </>
+      ) : (
+        <>
+          {/* Зірки */}
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={styles.star}
+              style={{
+                top: `${Math.random() * 100}vh`,
+                left: `${Math.random() * 100}vw`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{
+                duration: 2 + Math.random(),
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            >
+              <FaStar size={Math.random() * 5 + 3} color="#fff" />
+            </motion.div>
+          ))}
+        </>
+      )}
     </div>
   );
 };
 
 export default App;
-
-//  v useEffect #3(створити) потрібно використатти метод getCurrentPosition()(MDN) додати умову.Якщо
-// locationname є тоді просто return  в іншому випадку використовуємо getCurrentPosition і записуємо координати
-// locationname зберігати в локалсторєдж через редакс персіст.Тоді сітіфромЮрл треба буде до locationName
-
-// Зробити компонент КарентВезер виконати запит за поточною погодою який збережений в редаксі.Через юзєффект зробит
-// за карент везер з привязкою за поточною погодою
-// App.tsx

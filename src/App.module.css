@@ -1,6 +1,6 @@
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #87ceeb, #1e90ff);
+  background: linear-gradient(135deg, #7f86e9, #2f82d6 #8b0597);
   background-size: 200% 200%;
   animation: gradientAnimation 10s ease infinite;
   display: flex;
@@ -17,4 +17,18 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Стилі для хмарок */
+.cloud {
+  position: absolute;
+  z-index: 0;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+/* Стилі для зірок */
+.star {
+  position: absolute;
+  z-index: 0;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }

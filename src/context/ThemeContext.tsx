@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import styles from "./ThemeContext.module.css";
-import { FaStar, FaGlobe } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { GiGalaxy } from "react-icons/gi";
 
 interface ThemeContextType {
@@ -35,8 +35,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     () => ({
       background:
         theme === "light"
-          ? "linear-gradient(135deg, rgba(135, 206, 250, 1), rgba(0, 47, 108, 1))"
-          : "linear-gradient(135deg, #0d0015, #1e3a8a)",
+          ? "linear-gradient(135deg, rgba(135, 206, 250, 1), rgb(53, 121, 211), #8b0597)"
+          : "linear-gradient(155deg, #8b0597, #0d0015, #1e3a8a, #8b0597)",
       transition: "background 0.5s ease",
     }),
     [theme]
@@ -97,34 +97,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
                 <FaStar size={5} color="#fff" />
               </motion.div>
             ))}
-            <motion.div
-              className={styles.planet1}
-              initial={{ x: -100 }}
-              animate={{ x: "100vw" }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              style={{ top: "30%" }}
-            >
-              <FaGlobe size={40} color="#ffcc00" />
-            </motion.div>
-            <motion.div
-              className={styles.planet2}
-              initial={{ x: -100 }}
-              animate={{ x: "100vw" }}
-              transition={{
-                duration: 50,
-                repeat: Infinity,
-                ease: "linear",
-                delay: 10,
-              }}
-              style={{ top: "60%" }}
-            >
-              <FaGlobe size={60} color="#00ccff" />
-            </motion.div>
           </>
         )}
         <button className={styles.themeToggle} onClick={toggleTheme}>
-          {theme === "light" ? "Switch to Dark Theme" : "Switch to Light Theme"}
+          {theme === "light" ? "Dark Theme" : "Light Theme"}
         </button>
+
         {children}
       </div>
     </ThemeContext.Provider>

@@ -22,11 +22,11 @@
   position: absolute;
   width: 120px;
   height: 60px;
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.8) 40%,
     transparent 70%
-  );
+  ); */
   border-radius: 50%;
   filter: blur(8px);
   z-index: -1; /* На задньому плані */
@@ -37,11 +37,11 @@
   position: absolute;
   width: 80px;
   height: 40px;
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.6) 40%,
     transparent 70%
-  );
+  ); */
   border-radius: 50%;
   top: -20px;
   left: 20px;
@@ -53,11 +53,11 @@
   position: absolute;
   width: 60px;
   height: 30px;
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.4) 40%,
-    transparent 70%
-  );
+    transparent 70% */
+  /* ); */
   border-radius: 50%;
   top: 10px;
   left: 60px;
@@ -71,18 +71,18 @@
 }
 
 /* Планети */
-.planet1 {
+/* .planet1 {
   position: absolute;
-  z-index: -1; /* На задньому плані */
-}
+  z-index: 0; /* На задньому плані */
+/* } */
 
-.planet2 {
+/* .planet2 {
   position: absolute;
-  z-index: -1; /* На задньому плані */
-}
+  z-index: 0; /* На задньому плані */
+/* } */
 
 /* Галактики */
 .milkyway1 {
   position: absolute;
-  z-index: -1; /* На задньому плані */
+  z-index: 2; /* На задньому плані */
 }
