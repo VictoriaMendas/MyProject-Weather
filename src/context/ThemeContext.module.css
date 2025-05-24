@@ -3,18 +3,7 @@
   position: fixed;
   top: 80px;
   right: 20px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  z-index: 1001; /* Вище за Header */
-  transition: background 0.3s;
-}
-
-.themeToggle:hover {
-  background: rgba(255, 255, 255, 0.3);
+  z-index: 1001;
 }
 
 /* Хмарки */

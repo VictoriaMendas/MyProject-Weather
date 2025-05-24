@@ -108,6 +108,7 @@ import {
 import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./ThreeDaysWeather.module.css";
+import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
 
 export const ThreeDaysWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -159,7 +160,7 @@ export const ThreeDaysWeather: React.FC = () => {
     fetchThreeDayWeather();
   }, [coordinates, dispatch]);
 
-  if (isLoading) return <div className={styles.loader}>Loading...</div>;
+  if (isLoading) return <LoadingCircleSpinner />;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!threeDayWeather || !threeDayWeather.hourly) return null;
 

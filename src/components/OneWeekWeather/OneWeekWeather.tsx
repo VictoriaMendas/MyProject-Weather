@@ -262,6 +262,7 @@ import {
 import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./OneWeekWeather.module.css";
+import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
 
 export const OneWeekWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -442,7 +443,7 @@ export const OneWeekWeather: React.FC = () => {
     });
   };
 
-  if (isLoading) return <div className={styles.loader}>Loading...</div>;
+  if (isLoading) return <LoadingCircleSpinner/>;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!weekWeather) return null;
 

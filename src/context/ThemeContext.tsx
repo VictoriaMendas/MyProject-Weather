@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import styles from "./ThemeContext.module.css";
 import { FaStar } from "react-icons/fa";
 import { GiGalaxy } from "react-icons/gi";
+import ThemeSwitcher from "../components/ThemeSwitcher/ThemeSwitcher";
 
 interface ThemeContextType {
   theme: "light" | "dark";
@@ -99,9 +100,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
             ))}
           </>
         )}
-        <button className={styles.themeToggle} onClick={toggleTheme}>
-          {theme === "light" ? "Dark Theme" : "Light Theme"}
-        </button>
+        <div className={styles.themeToggle}>
+          <ThemeSwitcher />
+        </div>
 
         {children}
       </div>
