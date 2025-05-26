@@ -1,11 +1,11 @@
-//
+//реакт скрл ту топ бібліотека
 
 import React, { useEffect } from "react";
-import axios from "axios";
+
 import { useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "./redux/store";
-import { setCoordinates, setError, setLoading } from "./redux/weatherSlice";
-import { Routes, Route, useSearchParams } from "react-router-dom";
+import type { AppDispatch } from "./redux/store";
+import { setError } from "./redux/weatherSlice";
+import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
@@ -19,73 +19,16 @@ import { motion } from "framer-motion"; // Додаємо для анімаці�
 import { WiCloud } from "react-icons/wi"; // Іконка хмарки
 import { FaStar } from "react-icons/fa"; // Іконки зірок і планет
 import { useTheme } from "./context/ThemeContext"; // Використовуємо ThemeContext
-
-interface OpenCageResponse {
-  results: Array<{
-    geometry: {
-      lat: number;
-      lng: number;
-    };
-    components: {
-      city?: string;
-      town?: string;
-      village?: string;
-    };
-  }>;
-}
+import { fetchUserInfo } from "./redux/weatherOperations";
+import { Coords } from "./services/getUserInfo";
+import { selectCity } from "./redux/selector";
+import ScrollToTop from "react-scroll-to-top";
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const locationName = useSelector(
-    (state: RootState) => state.weather.locationName
-  );
-  const cityFromUrl = searchParams.get("city") || locationName;
+  const locationName = useSelector(selectCity);
+
   const { theme } = useTheme(); // Отримуємо поточну тему
-
-  // useEffect #1 (не чіпаємо)
-  useEffect(() => {
-    if (!cityFromUrl) return;
-    const fetchCoordinatesAndLocation = async () => {
-      dispatch(setLoading(true));
-      try {
-        const response = await axios.get<OpenCageResponse>(
-          "https://api.opencagedata.com/geocode/v1/json",
-          {
-            params: {
-              q: cityFromUrl,
-              key: import.meta.env.VITE_OPENWEATHER_API_KEY,
-              pretty: 1,
-              language: "en",
-            },
-          }
-        );
-
-        if (!response.data.results.length) {
-          throw new Error("City not found via geocoding");
-        }
-
-        const { lat, lng } = response.data.results[0].geometry;
-        dispatch(setCoordinates({ latitude: lat, longitude: lng }));
-
-        dispatch(setError(null));
-      } catch (error) {
-        dispatch(
-          setError(error instanceof Error ? error.message : "City not found")
-        );
-      } finally {
-        dispatch(setLoading(false));
-      }
-    };
-
-    fetchCoordinatesAndLocation();
-  }, [cityFromUrl, dispatch]);
-
-  // useEffect #2 (не чіпаємо)
-  useEffect(() => {
-    if (!locationName) return;
-    setSearchParams({ city: locationName });
-  }, [locationName, setSearchParams]);
 
   useEffect(() => {
     if (locationName) {
@@ -96,7 +39,11 @@ const App: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          dispatch(setCoordinates({ latitude, longitude })); // Зберігаємо координати
+          const crd: Coords = {
+            latitude,
+            longitude,
+          };
+          dispatch(fetchUserInfo(crd));
         },
         (error) => {
           dispatch(setError(error.message || "Failed to get current position"));
@@ -105,7 +52,7 @@ const App: React.FC = () => {
     } else {
       dispatch(setError("Geolocation is not supported by this browser"));
     }
-  }, [locationName, dispatch]); // Залежність від locationName, щоб реагувати на його зміну
+  }, [locationName, dispatch]);
 
   return (
     <div className={styles.app}>
@@ -120,7 +67,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
-
+      <ScrollToTop smooth component={<p style={{ color: "blue" }}>UP</p>} />
       {/* Додаємо плаваючі іконки */}
       {theme === "light" ? (
         <>

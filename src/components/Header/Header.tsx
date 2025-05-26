@@ -2,64 +2,56 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import {
-  setCoordinates,
-  setLocationName,
   setOneDayWeather,
   setThreeDayWeather,
   setWeekWeather,
   setMonthWeather,
 } from "../../redux/weatherSlice";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
+
+import { motion } from "framer-motion";
+
 import { GiHamburgerMenu } from "react-icons/gi";
 import { WiThermometer } from "react-icons/wi";
+import { fetchCityDetails } from "../../redux/weatherOperations";
+
+import { useTheme } from "../../context/ThemeContext";
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { locationName } = useSelector((state: RootState) => state.weather);
-  const [searchCity, setSearchCity] = useState("");
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+
+  const [searchCity, setSearchCity] = useState("");
+
+  const container = {
+    width: 100,
+    height: 50,
+    backgroundColor: "rgb(12, 11, 11)",
+    borderRadius: 50,
+    borderColor: "none",
+    cursor: "pointer",
+    display: "flex",
+    padding: "5px 8px",
+  };
+
+  const handle = {
+    width: 40,
+    height: 40,
+    backgroundColor: "#9911ff",
+    borderRadius: "50%",
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Search triggered:", searchCity);
     if (!searchCity) return;
+    dispatch(fetchCityDetails(searchCity));
 
-    try {
-      const response = await axios.get(
-        "https://nominatim.openstreetmap.org/search",
-        {
-          params: {
-            format: "json",
-            q: searchCity,
-            limit: 1,
-          },
-          headers: {
-            "User-Agent": "WeatherApp/1.0 (your-email@example.com)",
-          },
-        }
-      );
-
-      const data = response.data;
-      if (data && data.length > 0) {
-        const { lat, lon, display_name } = data[0];
-        dispatch(
-          setCoordinates({
-            latitude: parseFloat(lat),
-            longitude: parseFloat(lon),
-          })
-        );
-        dispatch(setLocationName(display_name));
-        setSearchCity("");
-      } else {
-        alert("City not found");
-      }
-    } catch (error) {
-      console.error("Error searching city:", error);
-      alert("Error searching city");
-    }
+    setSearchCity("");
   };
 
   const toggleSlider = () => {
@@ -117,6 +109,25 @@ export const Header: React.FC = () => {
             className={styles.searchInput}
           />
         </form>
+        <button
+          className="toggle-container"
+          style={{
+            ...container,
+            justifyContent: "flex-" + (theme === "light" ? "start" : "end"),
+          }}
+          onClick={toggleTheme}
+        >
+          <motion.div
+            className="toggle-handle"
+            style={handle}
+            layout
+            transition={{
+              type: "spring",
+              visualDuration: 0.2,
+              bounce: 0.2,
+            }}
+          />
+        </button>
         <div className={styles.burger} onClick={toggleSlider}>
           <GiHamburgerMenu size={30} className={styles.burgerIcon} />
         </div>

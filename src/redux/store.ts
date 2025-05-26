@@ -6,7 +6,7 @@ import storage from "redux-persist/lib/storage"; // Використовуємо
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["locationName"], // Зберігаємо тільки locationName
+  whitelist: ["locationName", "coordinates"], // Зберігаємо тільки locationName
 };
 
 const persistedReducer = persistReducer(persistConfig, weatherReducer);

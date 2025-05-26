@@ -196,7 +196,14 @@
   animation-duration: 25s;
   animation-delay: 10s;
 }
-
+.button {
+  padding: 5px 10px;
+  background: var(--container-bg);
+  color: var(--text);
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  cursor: pointer;
+}
 @keyframes moveClouds {
   0% {
     transform: translateX(-120px);

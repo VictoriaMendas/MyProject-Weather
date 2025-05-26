@@ -1,13 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-// Інтерфейси для типів даних
-interface CurrentWeather {
-  temperature: number;
-  weather_code: number;
-  wind_speed: number;
-  humidity: number;
-  time: string;
-}
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  fetchCityDetails,
+  fetchCurrentWeather,
+  fetchUserInfo,
+} from "./weatherOperations";
+import { CurrentWeather } from "../services/weatherService";
+import { Coords } from "../services/getUserInfo";
 
 interface DailyWeather {
   time: string[];
@@ -31,7 +29,7 @@ interface OneDayWeather {
 
 // Основний інтерфейс стану
 interface WeatherState {
-  coordinates: { latitude: number | null; longitude: number | null };
+  coordinates: null | Coords;
   locationName: string;
   currentWeather: CurrentWeather | null;
   oneDayWeather: OneDayWeather | null;
@@ -44,7 +42,7 @@ interface WeatherState {
 }
 
 const initialState: WeatherState = {
-  coordinates: { latitude: null, longitude: null },
+  coordinates: null,
   locationName: "",
   currentWeather: null,
   oneDayWeather: null,
@@ -62,9 +60,6 @@ const weatherSlice = createSlice({
   reducers: {
     setCoordinates: (state, action) => {
       state.coordinates = action.payload;
-    },
-    setLocationName: (state, action) => {
-      state.locationName = action.payload;
     },
     setCurrentWeather: (state, action) => {
       state.currentWeather = action.payload;
@@ -91,11 +86,45 @@ const weatherSlice = createSlice({
       state.error = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserInfo.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserInfo.fulfilled, (state, action) => {
+        state.locationName = action.payload.city;
+        state.coordinates = action.payload.location;
+        state.isLoading = false;
+      })
+      .addCase(fetchUserInfo.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchCityDetails.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchCityDetails.fulfilled, (state, action) => {
+        state.locationName = action.payload.city;
+        state.coordinates = action.payload.location;
+        state.isLoading = false;
+      })
+      .addCase(fetchCityDetails.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchCurrentWeather.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchCurrentWeather.fulfilled, (state, action) => {
+        state.currentWeather = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchCurrentWeather.rejected, (state) => {
+        state.isLoading = false;
+      });
+  },
 });
 
 export const {
   setCoordinates,
-  setLocationName,
   setCurrentWeather,
   setOneDayWeather,
   setThreeDayWeather,
