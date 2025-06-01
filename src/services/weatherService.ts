@@ -100,7 +100,7 @@ export const getCurrentWeather = async (
   );
 
   const currentData = response.data.current;
-  const weatherData: CurrentWeatherData = {
+  const weatherData: CurrentWeather = {
     temperature: currentData.temperature_2m,
     weather_code: currentData.weather_code,
     wind_speed: currentData.wind_speed_10m,
