@@ -97,6 +97,7 @@ import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./OneDayWeather.module.css";
 import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
+import { Coords } from "../../services/getUserInfo";
 
 export const OneDayWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,7 +105,7 @@ export const OneDayWeather: React.FC = () => {
     useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    const fetchOneDayWeather = async () => {
+    const fetchOneDayWeather = async (coordinates: Coords) => {
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));

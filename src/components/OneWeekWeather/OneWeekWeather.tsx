@@ -263,6 +263,7 @@ import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./OneWeekWeather.module.css";
 import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
+import { Coords } from "../../services/getUserInfo";
 
 export const OneWeekWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -278,7 +279,7 @@ export const OneWeekWeather: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchWeekWeather = async () => {
+    const fetchWeekWeather = async (coordinates: Coords) => {
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
@@ -384,7 +385,7 @@ export const OneWeekWeather: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchHourlyWeatherForDay = async () => {
+    const fetchHourlyWeatherForDay = async (coordinates: Coords) => {
       if (!selectedDay || !coordinates.latitude || !coordinates.longitude)
         return;
 
@@ -443,7 +444,7 @@ export const OneWeekWeather: React.FC = () => {
     });
   };
 
-  if (isLoading) return <LoadingCircleSpinner/>;
+  if (isLoading) return <LoadingCircleSpinner />;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!weekWeather) return null;
 

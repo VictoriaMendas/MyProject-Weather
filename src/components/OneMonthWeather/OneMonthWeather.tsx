@@ -263,6 +263,7 @@ import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./OneMonthWeather.module.css";
 import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
+import { Coords } from "../../services/getUserInfo";
 
 export const OneMonthWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -278,7 +279,8 @@ export const OneMonthWeather: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchMonthWeather = async () => {
+    const fetchMonthWeather = async (coordinates: Coords): Promise<void> => {
+      console.log(coordinates);
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
@@ -384,7 +386,7 @@ export const OneMonthWeather: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchHourlyWeatherForDay = async () => {
+    const fetchHourlyWeatherForDay = async (coordinates: Coords) => {
       if (!selectedDay || !coordinates.latitude || !coordinates.longitude)
         return;
 
@@ -443,7 +445,7 @@ export const OneMonthWeather: React.FC = () => {
     });
   };
 
-  if (isLoading) return <LoadingCircleSpinner/>;
+  if (isLoading) return <LoadingCircleSpinner />;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!monthWeather) return null;
 

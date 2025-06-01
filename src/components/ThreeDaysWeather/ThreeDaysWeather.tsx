@@ -109,6 +109,7 @@ import axios from "axios";
 import { getWeatherIcon } from "../../utils/weatherIcons";
 import styles from "./ThreeDaysWeather.module.css";
 import LoadingCircleSpinner from "../LoadingCircleSpinner/LoadingCircleSpinner";
+import { Coords } from "../../services/getUserInfo";
 
 export const ThreeDaysWeather: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -116,7 +117,7 @@ export const ThreeDaysWeather: React.FC = () => {
     useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    const fetchThreeDayWeather = async () => {
+    const fetchThreeDayWeather = async (coordinates: Coords) => {
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
