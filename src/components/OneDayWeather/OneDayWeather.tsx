@@ -105,7 +105,8 @@ export const OneDayWeather: React.FC = () => {
     useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    const fetchOneDayWeather = async (coordinates: Coords) => {
+    const fetchOneDayWeather = async (coordinates: Coords | null) => {
+      if (!coordinates) return;
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
@@ -142,7 +143,7 @@ export const OneDayWeather: React.FC = () => {
       }
     };
 
-    fetchOneDayWeather();
+    fetchOneDayWeather(coordinates);
   }, [coordinates, dispatch]);
 
   const formatTime = (timeStr: string) => {

@@ -117,7 +117,8 @@ export const ThreeDaysWeather: React.FC = () => {
     useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    const fetchThreeDayWeather = async (coordinates: Coords) => {
+    const fetchThreeDayWeather = async (coordinates: Coords | null) => {
+      if (!coordinates) return;
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
@@ -158,7 +159,7 @@ export const ThreeDaysWeather: React.FC = () => {
       }
     };
 
-    fetchThreeDayWeather();
+    fetchThreeDayWeather(coordinates);
   }, [coordinates, dispatch]);
 
   if (isLoading) return <LoadingCircleSpinner />;
