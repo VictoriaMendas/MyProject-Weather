@@ -279,8 +279,11 @@ export const OneMonthWeather: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchMonthWeather = async (coordinates: Coords): Promise<void> => {
+    const fetchMonthWeather = async (
+      coordinates: Coords | null
+    ): Promise<void> => {
       console.log(coordinates);
+      if (!coordinates) return;
       if (!coordinates.latitude || !coordinates.longitude) return;
 
       dispatch(setLoading(true));
@@ -377,7 +380,7 @@ export const OneMonthWeather: React.FC = () => {
       }
     };
 
-    fetchMonthWeather();
+    fetchMonthWeather(coordinates);
   }, [coordinates, dispatch]);
 
   const formatDateForApi = (dateStr: string) => {
@@ -386,7 +389,8 @@ export const OneMonthWeather: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchHourlyWeatherForDay = async (coordinates: Coords) => {
+    const fetchHourlyWeatherForDay = async (coordinates: Coords | null) => {
+      if (!coordinates) return;
       if (!selectedDay || !coordinates.latitude || !coordinates.longitude)
         return;
 
@@ -428,7 +432,7 @@ export const OneMonthWeather: React.FC = () => {
       }
     };
 
-    fetchHourlyWeatherForDay();
+    fetchHourlyWeatherForDay(coordinates);
   }, [selectedDay, coordinates, dispatch]);
 
   const formatDate = (dateStr: string) => {
